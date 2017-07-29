@@ -1,0 +1,5 @@
+{
+    "system-menu": [
+        { "id": 1, "title": "Root menu", "hint": "Root menu" }
+    ]
+}
