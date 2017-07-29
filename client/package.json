@@ -4,12 +4,12 @@
     "license": "MIT",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
+        "start": "ng serve --proxy-config proxy.conf.json",
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "mock-services": "json-server --watch ./mock-data/services.json"
+        "mock-services": "json-server --watch ./mock-data/services.json --routes ./mock-data/routes.json"
     },
     "private": true,
     "dependencies": {
