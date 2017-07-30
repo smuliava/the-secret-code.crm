@@ -5,3 +5,5 @@
 /server/the-secret-code.crm/bin/
 /server/the-secret-code.crm/obj/
 /server/the-secret-code.crm/obj/Debug/
+/server/the-secret-code.crm.Tests/bin/
+/server/the-secret-code.crm.Tests/obj/

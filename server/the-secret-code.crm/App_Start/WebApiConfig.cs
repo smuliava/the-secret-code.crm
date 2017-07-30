@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace the_secret_code.crm
+namespace TheSecretCode.CRM
 {
     public static class WebApiConfig
     {

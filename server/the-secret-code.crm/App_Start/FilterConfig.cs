@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace the_secret_code.crm
+namespace TheSecretCode.CRM
 {
     public class FilterConfig
     {
