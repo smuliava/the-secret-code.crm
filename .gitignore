@@ -2,3 +2,6 @@
 /.idea/
 /server/.vs/
 /server/packages/
+/server/the-secret-code.crm/bin/
+/server/the-secret-code.crm/obj/
+/server/the-secret-code.crm/obj/Debug/
