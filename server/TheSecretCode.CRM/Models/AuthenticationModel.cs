@@ -8,6 +8,9 @@ namespace TheSecretCode.CRM.Models
 {
     public class AuthenticationModel
     {
+        private string _password;
+        private string _confirmPassword;
+
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
@@ -21,6 +24,6 @@ namespace TheSecretCode.CRM.Models
         [DataType(DataType.Password)]
         [Display(Name = "Confirm user password")]
         [Compare("Password", ErrorMessage = "The password and confirmation passowrd do not match.")]
-        public string ConfigmPassword { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }
