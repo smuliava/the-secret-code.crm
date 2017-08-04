@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
@@ -71,16 +72,16 @@ namespace TheSecretCode.CRM
             byte[] audienceSecret = TextEncodings.Base64Url.Decode(ConfigurationManager.AppSettings["as:AudienceSecret"]);
 
             // Api controllers with an [Authorize] attribute will be validated with JWT
-            application.UseJwtBearerAuthentication(
-                new JwtBearerAuthenticationOptions
+            var jwtBearerAuthOptions = new JwtBearerAuthenticationOptions
+            {
+                AuthenticationMode = AuthenticationMode.Active,
+                AllowedAudiences = new[] { audienceId },
+                IssuerSecurityTokenProviders = new IIssuerSecurityTokenProvider[]
                 {
-                    AuthenticationMode = AuthenticationMode.Active,
-                    AllowedAudiences = new[] { audienceId },
-                    IssuerSecurityTokenProviders = new IIssuerSecurityTokenProvider[]
-                    {
-                        new SymmetricKeyIssuerSecurityTokenProvider(issuer, audienceSecret)
-                    }
-                });
+                    new SymmetricKeyIssuerSecurityTokenProvider(issuer, audienceSecret)
+                }
+            };
+            application.UseJwtBearerAuthentication(jwtBearerAuthOptions);
         }
 
         private void ConfigureWebApi(HttpConfiguration config)

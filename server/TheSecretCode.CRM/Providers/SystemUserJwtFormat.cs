@@ -1,12 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Microsoft.Owin.Security;
+﻿using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler.Encoder;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Web;
+using System.IdentityModel.Tokens;
+using Thinktecture.IdentityModel.Tokens;
 
 namespace TheSecretCode.CRM.Providers
 {
@@ -32,19 +29,18 @@ namespace TheSecretCode.CRM.Providers
 
             var keyByteArray = TextEncodings.Base64Url.Decode(symmetricKeyAsBase64);
 
-            var signingKey = new SymmetricSecurityKey(keyByteArray);
-
-            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
+            var signingKey = new HmacSigningCredentials(keyByteArray);
 
             var issued = data.Properties.IssuedUtc;
 
             var expires = data.Properties.ExpiresUtc;
 
-            var token = new JwtSecurityToken(_issuer, audienceId, data.Identity.Claims, issued.Value.UtcDateTime, expires.Value.UtcDateTime, signingCredentials);
+            var token = new JwtSecurityToken(_issuer, audienceId, data.Identity.Claims, issued.Value.UtcDateTime, expires.Value.UtcDateTime, signingKey);
 
             var handler = new JwtSecurityTokenHandler();
 
             var jwt = handler.WriteToken(token);
+
 
             return jwt;
         }

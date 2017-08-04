@@ -12,20 +12,16 @@ namespace TheSecretCode.CRM.Infrastructure
 {
     public class SystemUser : IdentityUser
     {
-        [Required]
-        [MaxLength(100)]
-        public string FirstName { get; set; }
+        //[MaxLength(100)]
+        //public string FirstName { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string LastName { get; set; }
+        //[MaxLength(100)]
+        //public string LastName { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string MiddleName { get; set; }
+        //[MaxLength(100)]
+        //public string MiddleName { get; set; }
 
-        [Required]
-        public byte Level { get; set; }
+        //public byte Level { get; set; }
 
         [Required]
         public DateTime RegistrationDate { get; set; }
