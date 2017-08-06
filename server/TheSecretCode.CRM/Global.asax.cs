@@ -54,7 +54,7 @@ namespace TheSecretCode.CRM
             {
                 //TODO: remove next option after switch to HTTPS
                 AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/oauth/token"),
+                TokenEndpointPath = new PathString("api/authirization/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                 Provider = new OAuthProvider(),
                 AccessTokenFormat = new SystemUserJwtFormat("http://localhost:59822")
