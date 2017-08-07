@@ -14,17 +14,17 @@ namespace TheSecretCode.CRM.Providers
 
             List<Claim> claims = new List<Claim>();
 
-            var daysInWork = (DateTime.Now.Date - user.RegistrationDate).TotalDays;
+            //var daysInWork = (DateTime.Now.Date - user.RegistrationDate).TotalDays;
 
-            if (daysInWork > 90)
-            {
-                claims.Add(CreateClaim("FTE", "1"));
+            //if (daysInWork > 90)
+            //{
+            //    claims.Add(CreateClaim("FTE", "1"));
 
-            }
-            else
-            {
-                claims.Add(CreateClaim("FTE", "0"));
-            }
+            //}
+            //else
+            //{
+            //    claims.Add(CreateClaim("FTE", "0"));
+            //}
 
             return claims;
         }

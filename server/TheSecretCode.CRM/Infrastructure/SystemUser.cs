@@ -23,8 +23,8 @@ namespace TheSecretCode.CRM.Infrastructure
 
         //public byte Level { get; set; }
 
-        [Required]
-        public DateTime RegistrationDate { get; set; }
+        //[Required]
+        //public DateTime RegistrationDate { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<SystemUser> manager, string authenticationType)
         {

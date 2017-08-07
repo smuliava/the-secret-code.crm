@@ -8,6 +8,10 @@ using System.Configuration;
 using System.Data.Entity.ModelConfiguration;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Data.Entity.Migrations.History;
+using System.ComponentModel.DataAnnotations.Schema;
+using TheSecretCode.CRM.Classes;
+using System.Data.Entity.Infrastructure;
 
 namespace TheSecretCode.CRM.Infrastructure
 {
@@ -28,16 +32,31 @@ namespace TheSecretCode.CRM.Infrastructure
             string dbSystemUserIdFieldName = ConfigurationManager.AppSettings["athentificatinon:DBSystemUserIdFieldName"];
 
             modelBuilder.HasDefaultSchema(dbSchemaName);
+
             modelBuilder.Entity<SystemUser>().ToTable(dbSystemUsersTableName);
 
-            modelBuilder.Entity<IdentityUserClaim>().ToTable(dbSystemUsersClaimsTableName);
-            modelBuilder.Entity<IdentityUserClaim>().Property(entityProperty => entityProperty.UserId).HasColumnName(dbSystemUserIdFieldName);
+            modelBuilder.Entity<IdentityUserClaim>()
+                .ToTable(dbSystemUsersClaimsTableName)
+                .Property(entityProperty => entityProperty.UserId)
+                    .HasColumnName(dbSystemUserIdFieldName);
 
-            modelBuilder.Entity<IdentityUserLogin>().ToTable(dbSystemUsersLoginsTableName);
-            modelBuilder.Entity<IdentityUserLogin>().Property(entityProperty => entityProperty.UserId).HasColumnName(dbSystemUserIdFieldName);
+            modelBuilder.Entity<IdentityUserLogin>()
+                .ToTable(dbSystemUsersLoginsTableName)
+                .Property(entityProperty => entityProperty.UserId)
+                    .HasColumnName(dbSystemUserIdFieldName);
 
-            modelBuilder.Entity<IdentityUserRole>().ToTable(dbSystemUsersRolesTableName);
-            modelBuilder.Entity<IdentityUserRole>().Property(entityProperty => entityProperty.UserId).HasColumnName(dbSystemUserIdFieldName);
+            modelBuilder.Entity<IdentityUserRole>()
+                .ToTable(dbSystemUsersRolesTableName)
+                .Property(entityProperty => entityProperty.UserId)
+                    .HasColumnName(dbSystemUserIdFieldName);
+
+            modelBuilder.Entity<IdentityRole>()
+                .ToTable("tblRoles")
+                .Property(t => t.Id);
+
+            modelBuilder.Entity<HistoryRow>()
+                .ToTable(tableName: "__MigrationHistory", schemaName: "auth")
+                .HasKey(r => new { r.MigrationId, r.ContextKey });
         }
 
         public static AuthorizationDBContext Create()
