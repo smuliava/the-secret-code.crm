@@ -2,8 +2,8 @@
 /.idea/
 /server/.vs/
 /server/packages/
-/server/the-secret-code.crm/bin/
-/server/the-secret-code.crm/obj/
-/server/the-secret-code.crm/obj/Debug/
-/server/the-secret-code.crm.Tests/bin/
-/server/the-secret-code.crm.Tests/obj/
+/server/TheSecretCode.CRM/bin/
+/server/TheSecretCode.CRM/obj/
+/server/TheSecretCode.CRM/obj/Debug/
+/server/TheSecretCode.CRM.Tests/bin/
+/server/TheSecretCode.CRM.Tests/obj/
