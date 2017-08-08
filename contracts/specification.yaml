@@ -1,0 +1,122 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "System of the Intelectual design"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+- name: "store"
+  description: "Access to Petstore orders"
+schemes:
+- "http"
+paths:
+  /system-menu:
+    get:
+      tags:
+      - "System menu"
+      summary: "Returns whole list of avaiable system menu"
+      description: "Returns whole list of avaiable system menu"
+      operationId: "getSystemMenu"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/SystemMenuList'
+      security:
+      - api_key: []
+    post:
+      tags:
+      - "System menu"
+      summary: "Add new system menu item"
+      description: ""
+      operationId: "addSystemMenuItem"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "system menu item to add to user system menu"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateSystemMenuList"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SystemMenuList"
+        400:
+          description: "Invalid Order"
+  /system-menu/{menuItemId}:
+    put:
+        tags:
+        - "System menu"
+        summary: "Update the system menu item"
+        description: ""
+        operationId: "updateSystemMenuItem"
+        produces:
+        - "application/json"
+        parameters:
+        - name: "menuItemId"
+          in: "path"
+          type: "string"
+          required: true
+        - in: "body"
+          name: "body"
+          description: "system menu item to updte"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateSystemMenuList"
+        responses:
+          200:
+            description: "successful operation"
+            schema:
+              $ref: "#/definitions/SystemMenuList"
+          400:
+            description: "Invalid Order"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  SystemMenuList:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      caption:
+        type: "string"
+      title:
+        type: "string"
+      order:
+        type: "integer"
+        format: "int32"
+    xml:
+      name: "SystemMenuList"
+  CreateSystemMenuList:
+    type: "object"
+    properties:
+      caption:
+        type: "string"
+      title:
+        type: "string"
+      order:
+        type: "integer"
+        format: "int32"
+    xml:
+      name: "SystemMenuList"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
