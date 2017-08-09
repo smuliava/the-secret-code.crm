@@ -18,7 +18,7 @@ namespace TheSecretCode.CRM.Infrastructure
 
         public static SystemRoleManager Create(IdentityFactoryOptions<SystemRoleManager> options, IOwinContext context)
         {
-            var appRoleManager = new SystemRoleManager(new RoleStore<IdentityRole>(context.Get<AuthorizationDBContext>()));
+            var appRoleManager = new SystemRoleManager(new RoleStore<IdentityRole>(context.Get<AuthorizationDbContext>()));
 
             return appRoleManager;
         }

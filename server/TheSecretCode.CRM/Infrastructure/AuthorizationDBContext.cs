@@ -15,9 +15,9 @@ using System.Data.Entity.Infrastructure;
 
 namespace TheSecretCode.CRM.Infrastructure
 {
-    public class AuthorizationDBContext : IdentityDbContext<SystemUser>
+    public class AuthorizationDbContext : IdentityDbContext<SystemUser>
     {
-        public AuthorizationDBContext()
+        public AuthorizationDbContext()
             : base("AuthorizationContext", throwIfV1Schema: false)
         { }
 
@@ -51,17 +51,16 @@ namespace TheSecretCode.CRM.Infrastructure
                     .HasColumnName(dbSystemUserIdFieldName);
 
             modelBuilder.Entity<IdentityRole>()
-                .ToTable("tblRoles")
-                .Property(t => t.Id);
+                .ToTable("tblRoles");
 
             modelBuilder.Entity<HistoryRow>()
                 .ToTable(tableName: "__MigrationHistory", schemaName: "auth")
                 .HasKey(r => new { r.MigrationId, r.ContextKey });
         }
 
-        public static AuthorizationDBContext Create()
+        public static AuthorizationDbContext Create()
         {
-            return new AuthorizationDBContext();
+            return new AuthorizationDbContext();
         }
     }
 }

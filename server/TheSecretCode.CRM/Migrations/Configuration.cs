@@ -5,14 +5,14 @@ namespace TheSecretCode.CRM.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<TheSecretCode.CRM.Infrastructure.AuthorizationDBContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<TheSecretCode.CRM.Infrastructure.AuthorizationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(TheSecretCode.CRM.Infrastructure.AuthorizationDBContext context)
+        protected override void Seed(TheSecretCode.CRM.Infrastructure.AuthorizationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 
