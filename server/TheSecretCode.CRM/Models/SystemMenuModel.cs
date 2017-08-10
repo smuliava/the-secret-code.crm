@@ -8,13 +8,11 @@ namespace TheSecretCode.CRM.Models
 {
     public class SystemMenuModel
     {
-        [Required]
         public string Id { get; set; }
         [Required]
+        [StringLength(64, MinimumLength = 3)]
         public string Caption { get; set; }
-        [Required]
         public string Title { get; set; }
-        [Required]
         public int Order { get; set; }
     }
 }
