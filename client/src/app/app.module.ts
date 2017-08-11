@@ -1,12 +1,10 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MdButtonModule, MdCheckboxModule, MdSidenavModule} from '@angular/material';
 import {SystemMenuComponent} from './components/system-menu/system-menu.component';
-
 
 @NgModule({
     declarations: [
@@ -16,7 +14,6 @@ import {SystemMenuComponent} from './components/system-menu/system-menu.componen
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        HttpClientModule,
         MdButtonModule,
         MdCheckboxModule,
         MdSidenavModule
@@ -24,5 +21,4 @@ import {SystemMenuComponent} from './components/system-menu/system-menu.componen
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }
