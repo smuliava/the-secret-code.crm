@@ -17,7 +17,7 @@ namespace TheSecretCode.CRM.Infrastructure
 
         public static SystemUserManager Create(IdentityFactoryOptions<SystemUserManager> options, IOwinContext context)
         {
-            var appDbContext = context.Get<AuthorizationDBContext>();
+            var appDbContext = context.Get<AuthorizationDbContext>();
             var appUserManager = new SystemUserManager(new UserStore<SystemUser>(appDbContext));
 
             // Configure validation logic for usernames

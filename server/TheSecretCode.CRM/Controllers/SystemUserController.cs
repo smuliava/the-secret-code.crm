@@ -14,7 +14,7 @@ namespace TheSecretCode.CRM.Controllers
     [RoutePrefix("api/SystemUser")]
     public class SystemUserController : ApiController
     {
-        private AuthRepository Repository = new AuthRepository();
+        private AuthRepository _repository = new AuthRepository();
 
         public SystemUserController()
         {
@@ -30,7 +30,7 @@ namespace TheSecretCode.CRM.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await Repository.RegisterUser(userModel);
+            IdentityResult result = await _repository.RegisterUser(userModel);
 
             IHttpActionResult errorResult = GetErrorResult(result);
 
@@ -74,7 +74,7 @@ namespace TheSecretCode.CRM.Controllers
         {
             if (disposing)
             {
-                Repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }
