@@ -11,7 +11,7 @@ using TheSecretCode.CRM.Models;
 
 namespace TheSecretCode.CRM.Controllers
 {
-    [RoutePrefix("api/SystemUser")]
+    [RoutePrefix("Api/System-Users")]
     public class SystemUserController : ApiController
     {
         private AuthRepository _repository = new AuthRepository();
@@ -40,6 +40,11 @@ namespace TheSecretCode.CRM.Controllers
             }
 
             return Ok();
+        }
+
+        [Route("{id:guid}")]
+        public async Task<IHttpActionResult> GetUserById(Guid id)
+        {
         }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
