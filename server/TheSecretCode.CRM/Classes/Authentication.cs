@@ -11,25 +11,14 @@ using TheSecretCode.CRM.Infrastructure;
 
 namespace TheSecretCode.CRM.Classes
 {
-    public class Startup
-    {
-
-        public void Configuration(IAppBuilder app)
-        {
-            HttpConfiguration config = new HttpConfiguration();
-            WebApiConfig.Register(config);
-            //app.UseWebApi(config);
-        }
-    }
-
     public class AuthRepository : IDisposable
     {
-        private AuthorizationDBContext _authContext;
+        private AuthorizationDbContext _authContext;
         private UserManager<SystemUser> _userManager;
 
         public AuthRepository()
         {
-            _authContext = new AuthorizationDBContext();
+            _authContext = new AuthorizationDbContext();
             var userStore = new UserStore<SystemUser>(_authContext);
             _userManager = new UserManager<SystemUser>(userStore);
         }
