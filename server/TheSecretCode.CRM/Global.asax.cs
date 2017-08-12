@@ -46,7 +46,7 @@ namespace TheSecretCode.CRM
         private void ConfigureOAuthTokenGeneration(IAppBuilder application)
         {
             // Configure the db context and user manager to use a single instance per request
-            application.CreatePerOwinContext(AuthorizationDBContext.Create);
+            application.CreatePerOwinContext(AuthorizationDbContext.Create);
             application.CreatePerOwinContext<SystemUserManager>(SystemUserManager.Create);
             application.CreatePerOwinContext<SystemRoleManager>(SystemRoleManager.Create);
 
@@ -54,7 +54,7 @@ namespace TheSecretCode.CRM
             {
                 //TODO: remove next option after switch to HTTPS
                 AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/oauth/token"),
+                TokenEndpointPath = new PathString("/authorization/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
                 Provider = new OAuthProvider(),
                 AccessTokenFormat = new SystemUserJwtFormat("http://localhost:59822")
@@ -72,7 +72,7 @@ namespace TheSecretCode.CRM
             byte[] audienceSecret = TextEncodings.Base64Url.Decode(ConfigurationManager.AppSettings["as:AudienceSecret"]);
 
             // Api controllers with an [Authorize] attribute will be validated with JWT
-            var jwtBearerAuthOptions = new JwtBearerAuthenticationOptions
+            var jwtBearerAuthOptions = new JwtBearerAuthenticationOptions()
             {
                 AuthenticationMode = AuthenticationMode.Active,
                 AllowedAudiences = new[] { audienceId },

@@ -8,9 +8,6 @@ namespace TheSecretCode.CRM.Models
 {
     public class AuthenticationModel
     {
-        private string _password;
-        private string _confirmPassword;
-
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
