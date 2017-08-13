@@ -11,7 +11,6 @@ namespace TheSecretCode.CRM.Providers
     {
         public static IEnumerable<Claim> GetClaims(SystemUser user)
         {
-
             List<Claim> claims = new List<Claim>();
             return claims;
         }
