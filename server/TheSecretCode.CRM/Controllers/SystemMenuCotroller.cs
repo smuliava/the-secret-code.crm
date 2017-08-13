@@ -7,7 +7,7 @@ using TheSecretCode.CRM.Models;
 
 namespace TheSecretCode.CRM.Controllers
 {
-    [RoutePrefix("Api/SystemMenu")]
+    [RoutePrefix("API/System-Menu")]
     public class SystemMenuController : ApiController
     {
         [HttpGet]
