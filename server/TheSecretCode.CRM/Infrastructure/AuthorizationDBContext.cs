@@ -24,12 +24,13 @@ namespace TheSecretCode.CRM.Infrastructure
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            string dbSchemaName = ConfigurationManager.AppSettings["athentificatinon:DBSchemaName"];
-            string dbSystemUsersTableName = ConfigurationManager.AppSettings["athentificatinon:DBSystemUsersTableName"];
-            string dbSystemUsersClaimsTableName = ConfigurationManager.AppSettings["athentificatinon:DBSystemUsersClaimsTableName"];
-            string dbSystemUsersLoginsTableName = ConfigurationManager.AppSettings["athentificatinon:DBSystemUsersLoginsTableName"];
-            string dbSystemUsersRolesTableName = ConfigurationManager.AppSettings["athentificatinon:DBSystemUsersRolesTableName"];
-            string dbSystemUserIdFieldName = ConfigurationManager.AppSettings["athentificatinon:DBSystemUserIdFieldName"];
+            string dbSchemaName = ConfigurationManager.AppSettings["athentificatinon:DbSchemaName"];
+            string dbSystemUsersTableName = ConfigurationManager.AppSettings["athentificatinon:DbSystemUsersTableName"];
+            string dbSystemUsersClaimsTableName = ConfigurationManager.AppSettings["athentificatinon:DbSystemUsersClaimsTableName"];
+            string dbSystemUsersLoginsTableName = ConfigurationManager.AppSettings["athentificatinon:DbSystemUsersLoginsTableName"];
+            string dbSystemUsersRolesTableName = ConfigurationManager.AppSettings["athentificatinon:DbSystemUsersRolesTableName"];
+            string dbSystemUserIdFieldName = ConfigurationManager.AppSettings["athentificatinon:DbSystemUserIdFieldName"];
+            string dbRolesTableName = ConfigurationManager.AppSettings["athentificatinon:DbRolesTableName"];
 
             modelBuilder.HasDefaultSchema(dbSchemaName);
 
@@ -51,11 +52,7 @@ namespace TheSecretCode.CRM.Infrastructure
                     .HasColumnName(dbSystemUserIdFieldName);
 
             modelBuilder.Entity<IdentityRole>()
-                .ToTable("tblRoles");
-
-            modelBuilder.Entity<HistoryRow>()
-                .ToTable(tableName: "__MigrationHistory", schemaName: "auth")
-                .HasKey(r => new { r.MigrationId, r.ContextKey });
+                .ToTable(dbRolesTableName);
         }
 
         public static AuthorizationDbContext Create()

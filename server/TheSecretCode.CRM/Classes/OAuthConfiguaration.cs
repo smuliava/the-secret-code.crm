@@ -14,7 +14,7 @@ using TheSecretCode.CRM.Providers;
 
 namespace TheSecretCode.CRM.Classes
 {
-    public class OAuthConfiguaration
+    public static class OAuthConfiguaration
     {
         public static void Configuare(IAppBuilder application)
         {
