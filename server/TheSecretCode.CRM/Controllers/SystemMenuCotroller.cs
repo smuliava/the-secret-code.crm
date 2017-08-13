@@ -39,6 +39,16 @@ namespace TheSecretCode.CRM.Controllers
             }
             return BadRequest();
         }
+        [HttpPut]
+        [Route("{Id:guid}")]
+        public async Task<IHttpActionResult> UpdateSystemMenu(Guid id, SystemMenuModel menuItemData)
+        {
+            if(ModelState.IsValid)
+            {
+                return Ok(menuItemData);
+            }
+            return BadRequest();
+        }
         private IHttpActionResult json(object p)
         {
             throw new NotImplementedException();
