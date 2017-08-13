@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="sergii (generated)" id="1502646060180-1">
+        <createTable tableName="tblSystemMenu">
+            <column defaultValueComputed="uuid_generate_v4()" name="Id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ParrentId" type="UUID"/>
+            <column name="CreatedBySystemUserId" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="CreatedOn" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ModifiedBySystemUserId" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueComputed="now()" name="ModifiedOn" type="TIMESTAMP(6) WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Caption" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Title" type="VARCHAR"/>
+            <column name="Order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="sergii (generated)" id="1502646060180-2">
+        <addPrimaryKey columnNames="Id" constraintName="tblSystemMenu_pkey" tableName="tblSystemMenu"/>
+    </changeSet>
+    <changeSet author="sergii (generated)" id="1502646060180-3">
+        <createIndex indexName="idxTblSystemMenuIdParrentId" tableName="tblSystemMenu">
+            <column name="Id"/>
+            <column name="ParrentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="sergii (generated)" id="1502646060180-4">
+        <createIndex indexName="idxTblSystemMenuParrentId" tableName="tblSystemMenu">
+            <column name="ParrentId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="sergii (generated)" id="1502646060180-5">
+        <addForeignKeyConstraint baseColumnNames="CreatedBySystemUserId" baseTableName="tblSystemMenu" constraintName="tblSystemMenu_CreatedBySystemUserId_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="Id" referencedTableName="tblSystemUsers" referencedTableSchemaName="auth"/>
+    </changeSet>
+    <changeSet author="sergii (generated)" id="1502646060180-6">
+        <addForeignKeyConstraint baseColumnNames="ModifiedBySystemUserId" baseTableName="tblSystemMenu" constraintName="tblSystemMenu_ModifiedBySystemUserId_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="Id" referencedTableName="tblSystemUsers" referencedTableSchemaName="auth"/>
+    </changeSet>
+    <changeSet author="sergii (generated)" id="1502646060180-7">
+        <addForeignKeyConstraint baseColumnNames="ParrentId" baseTableName="tblSystemMenu" constraintName="tblSystemMenu_ParrentId_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="Id" referencedTableName="tblSystemMenu"/>
+    </changeSet>
+</databaseChangeLog>
