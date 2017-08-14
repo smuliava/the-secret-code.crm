@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Data.Entity;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using TheSecretCode.CRM.Models;
@@ -10,9 +12,12 @@ namespace TheSecretCode.CRM.Controllers
 {
     internal class SystemMenuContext : DbContext
     {
-        public SystemMenuContext() : base("SystemMenuContext")
+        public SystemMenuContext() 
+            : base("SystemMenuContext")
         {
+
         }
+
         public DbSet<SystemMenuModel> SystemMenu { get; set; }
     }
     [RoutePrefix("Api/SystemMenu")]
@@ -23,46 +28,51 @@ namespace TheSecretCode.CRM.Controllers
         public async Task<IHttpActionResult> GetSystemMenu()
         {
             SystemMenuContext db = new SystemMenuContext();
-            Guid? ParrentId = null;
-            var SystemMenu = await db.SystemMenu.FindAsync(ParrentId);
-            /*var systemMenuData = new StreamReader(@"d:\projects\crm\the-secret-code.crm\server\TheSecretCode.CRM\DataMocks\SystemMenu.json");
-            string json = await systemMenuData.ReadToEndAsync();
-            systemMenuData.Close();*/
-            return Ok(JArray.FromObject(SystemMenu));
+            var systemMenu = db.SystemMenu.Where(systemMenuItem => systemMenuItem.ParentId == null);
+            return Ok(systemMenu);
         }
         [HttpGet]
         [Route("{Id:guid}")]
-        public async Task<IHttpActionResult> GetSystemMenuById(Guid Parrentid)
+        public async Task<IHttpActionResult> GetSystemMenuById(Guid id)
         {
-            var systemMenuByIdData = new StreamReader(@"d:\projects\crm\the-secret-code.crm\server\TheSecretCode.CRM\DataMocks\SystemMenu.json");
-            string json = await systemMenuByIdData.ReadToEndAsync();
-            systemMenuByIdData.Close();
-            return Ok(JArray.Parse(json));
+            SystemMenuContext db = new SystemMenuContext();
+            var systemMenu = db.SystemMenu.Where(systemMenuItem => systemMenuItem.ParentId == id);
+            return Ok(systemMenu);
         }
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> CreateSystemMenu(SystemMenuModel menuItem)
+        public async Task<IHttpActionResult> CreateSystemMenu(SystemMenuModel newMenuItem)
         {
             if (ModelState.IsValid)
             {
-                menuItem.Id = Guid.NewGuid();
-                return Ok(menuItem);
+                SystemMenuContext db = new SystemMenuContext();
+                newMenuItem.Id = Guid.NewGuid();
+                newMenuItem.CreatedOn = DateTime.Now;
+                newMenuItem.ModifiedOn = DateTime.Now;
+                db.SystemMenu.Add(newMenuItem);
+                db.SaveChanges();
+                return Ok(newMenuItem);
             }
             return BadRequest();
         }
         [HttpPut]
         [Route("{Id:guid}")]
-        public async Task<IHttpActionResult> UpdateSystemMenu(Guid id, SystemMenuModel menuItemData)
+        public async Task<IHttpActionResult> UpdateSystemMenu(Guid id, SystemMenuModel newMenuItemData)
         {
             if(ModelState.IsValid)
             {
-                return Ok(menuItemData);
+                SystemMenuContext db = new SystemMenuContext();
+                var newMenuItem = await db.SystemMenu.FindAsync(id);
+                newMenuItem.ParentId = newMenuItemData.ParentId;
+                newMenuItem.ModifiedBySystemUserId = newMenuItemData.ModifiedBySystemUserId;
+                newMenuItem.ModifiedOn = DateTime.Now;
+                newMenuItem.Caption = newMenuItemData.Caption;
+                newMenuItem.Title = newMenuItemData.Title;
+                newMenuItem.Order = newMenuItemData.Order;
+                db.SaveChanges();
+                return Ok(newMenuItem);
             }
             return BadRequest();
-        }
-        private IHttpActionResult json(object p)
-        {
-            throw new NotImplementedException();
         }
     }
 }
