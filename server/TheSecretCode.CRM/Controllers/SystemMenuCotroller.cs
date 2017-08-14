@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -20,7 +17,7 @@ namespace TheSecretCode.CRM.Controllers
 
         public DbSet<SystemMenuModel> SystemMenu { get; set; }
     }
-    [RoutePrefix("Api/SystemMenu")]
+    [RoutePrefix("Api/System-Menu")]
     public class SystemMenuController : ApiController
     {
         [HttpGet]
