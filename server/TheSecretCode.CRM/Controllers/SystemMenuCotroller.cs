@@ -50,16 +50,21 @@ namespace TheSecretCode.CRM.Controllers
         {
             if (ModelState.IsValid)
             {
-                SystemMenuContext db = new SystemMenuContext();
-                List<Guid?> parentIds = new List<Guid?>();
+                var db = new SystemMenuContext();
+                var parentIds = new List<Guid?>();
+                var qniqueParentIds = new Dictionary<string, bool>(10);
                 for(int i = 0, lenght = newSystemMenuItems.Length; i < lenght; i++)
                 {
-                    parentIds.Add(newSystemMenuItems[i].ParentId);
-                    db.SystemMenu.Add(newSystemMenuItems[i]);
+                    if (!qniqueParentIds.ContainsKey(newSystemMenuItems[i].ParentId.ToString()))
+                    {
+                        parentIds.Add(newSystemMenuItems[i].ParentId);
+                    }
+                    
                 }
+                db.SystemMenu.AddRange(newSystemMenuItems);
                 await db.SaveChangesAsync();
                 var systemMenu = await db.SystemMenu
-                    .Where(systemMenuItem => parentIds.Distinct().Contains(systemMenuItem.ParentId))
+                    .Where(systemMenuItem => parentIds.Contains(systemMenuItem.ParentId))
                     .OrderBy(systemMenuItem => systemMenuItem.Order)
                     .ThenBy(systemMenuItem => systemMenuItem.CreatedOn)
                     .ToArrayAsync();
