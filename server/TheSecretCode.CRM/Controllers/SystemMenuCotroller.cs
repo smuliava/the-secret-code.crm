@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -15,7 +17,7 @@ namespace TheSecretCode.CRM.Controllers
 
         }
 
-        public DbSet<SystemMenuModel> SystemMenu { get; set; }
+        public DbSet<SystemMenu> SystemMenu { get; set; }
     }
     [RoutePrefix("Api/System-Menu")]
     public class SystemMenuController : ApiController
@@ -25,49 +27,63 @@ namespace TheSecretCode.CRM.Controllers
         public async Task<IHttpActionResult> GetSystemMenu()
         {
             SystemMenuContext db = new SystemMenuContext();
-            var systemMenu = db.SystemMenu.Where(systemMenuItem => systemMenuItem.ParentId == null);
+            var systemMenu = await db.SystemMenu
+                .Where(systemMenuItem => systemMenuItem.ParentId == null)
+                .OrderBy(systemMenuItem => systemMenuItem.Order)
+                .ToArrayAsync();
             return Ok(systemMenu);
         }
         [HttpGet]
         [Route("{Id:guid}")]
-        public async Task<IHttpActionResult> GetSystemMenuById(Guid id)
+        public async Task<IHttpActionResult> GetChildSystemMenuById(Guid id)
         {
             SystemMenuContext db = new SystemMenuContext();
-            var systemMenu = db.SystemMenu.Where(systemMenuItem => systemMenuItem.ParentId == id);
+            var systemMenu = await db.SystemMenu
+                .Where(systemMenuItem => systemMenuItem.ParentId == id)
+                .OrderBy(systemMenuItem => systemMenuItem.Order)
+                .ToArrayAsync();
             return Ok(systemMenu);
         }
         [HttpPost]
         [Route("")]
-        public async Task<IHttpActionResult> CreateSystemMenu(SystemMenuModel newMenuItem)
+        public async Task<IHttpActionResult> CreateSystemMenu(SystemMenu[] newSystemMenuItems)
         {
             if (ModelState.IsValid)
             {
                 SystemMenuContext db = new SystemMenuContext();
-                newMenuItem.Id = Guid.NewGuid();
-                newMenuItem.CreatedOn = DateTime.Now;
-                newMenuItem.ModifiedOn = DateTime.Now;
-                db.SystemMenu.Add(newMenuItem);
-                db.SaveChanges();
-                return Ok(newMenuItem);
+                List<Guid?> parentIds = new List<Guid?>();
+                for(int i = 0, lenght = newSystemMenuItems.Length; i < lenght; i++)
+                {
+                    parentIds.Add(newSystemMenuItems[i].ParentId);
+                    db.SystemMenu.Add(newSystemMenuItems[i]);
+                }
+                await db.SaveChangesAsync();
+                var systemMenu = await db.SystemMenu
+                    .Where(systemMenuItem => parentIds.Distinct().Contains(systemMenuItem.ParentId))
+                    .OrderBy(systemMenuItem => systemMenuItem.Order)
+                    .ThenBy(systemMenuItem => systemMenuItem.CreatedOn)
+                    .ToArrayAsync();
+                return Ok(systemMenu);
             }
             return BadRequest();
         }
         [HttpPut]
-        [Route("{Id:guid}")]
-        public async Task<IHttpActionResult> UpdateSystemMenu(Guid id, SystemMenuModel newMenuItemData)
+        [Route("")]
+        public async Task<IHttpActionResult> UpdateSystemMenuItems(CollectionRequest<SystemMenu> newMenuItemsData)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 SystemMenuContext db = new SystemMenuContext();
-                var newMenuItem = await db.SystemMenu.FindAsync(id);
-                newMenuItem.ParentId = newMenuItemData.ParentId;
-                newMenuItem.ModifiedBySystemUserId = newMenuItemData.ModifiedBySystemUserId;
-                newMenuItem.ModifiedOn = DateTime.Now;
-                newMenuItem.Caption = newMenuItemData.Caption;
-                newMenuItem.Title = newMenuItemData.Title;
-                newMenuItem.Order = newMenuItemData.Order;
-                db.SaveChanges();
-                return Ok(newMenuItem);
+                if (newMenuItemsData.Reorder)
+                {
+
+                }
+                else
+                {
+
+                }
+                await db.SaveChangesAsync();
+                return Ok();
             }
             return BadRequest();
         }
