@@ -55,9 +55,12 @@ namespace TheSecretCode.CRM.Controllers
                 var uniqueParentIds = new Dictionary<string, bool>(10);
                 for(int i = 0, lenght = newSystemMenuItems.Length; i < lenght; i++)
                 {
-                    if (!uniqueParentIds.ContainsKey(newSystemMenuItems[i].ParentId.ToString()))
+                    var parentId = newSystemMenuItems[i].ParentId;
+                    var parentIdKey = parentId.ToString();
+                    if (!uniqueParentIds.ContainsKey(parentIdKey))
                     {
-                        parentIds.Add(newSystemMenuItems[i].ParentId);
+                        parentIds.Add(parentId);
+                        uniqueParentIds.Add(parentIdKey, true);
                     }
                     
                 }
