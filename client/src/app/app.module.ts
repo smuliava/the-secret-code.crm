@@ -6,6 +6,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MdButtonModule, MdCheckboxModule, MdSidenavModule} from '@angular/material';
 import {SystemMenuComponent} from './components/system-menu/system-menu.component';
 import {RouterModule} from "@angular/router";
+import {routes} from "./app.routes";
 
 @NgModule({
     declarations: [
@@ -18,7 +19,7 @@ import {RouterModule} from "@angular/router";
         MdButtonModule,
         MdCheckboxModule,
         MdSidenavModule,
-        RouterModule.forRoot([], {enableTracing: true})
+        RouterModule.forRoot(routes, {enableTracing: true})
     ],
     providers: [],
     bootstrap: [AppComponent]
