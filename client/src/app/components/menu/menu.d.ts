@@ -1,4 +1,4 @@
-export class Menu {
+interface IMenu {
     id: string;
     title: string;
     parentId: number;

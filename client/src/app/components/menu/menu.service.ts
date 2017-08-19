@@ -1,6 +1,5 @@
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Menu} from "./menu";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable()
 export class MenuService {
@@ -8,16 +7,14 @@ export class MenuService {
     private menuUrl = 'api/menu';
     private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-    constructor(private http: HttpClient) {
+    public constructor(private http: HttpClient) {
     }
 
-    getMenu() {
-        const vm = this;
-        return vm.http.get<Menu[]>(vm.menuUrl);
+    public getMenu() {
+        return this.http.get<IMenu[]>(this.menuUrl);
     }
 
-    create(menuTitle: string) {
-        const vm = this;
-        return vm.http.post<Menu[]>(vm.menuUrl, JSON.stringify({title: menuTitle}), {headers: new HttpHeaders({'Content-Type': 'application/json'})})
+    public create(menuTitle: string) {
+        return this.http.post<IMenu>(this.menuUrl, JSON.stringify({title: menuTitle}), {headers: this.headers});
     }
 }

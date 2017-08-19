@@ -1,6 +1,5 @@
-import {Component, OnInit} from "@angular/core";
-import {Menu} from "./menu";
-import {MenuService} from "./menu.service";
+import {Component, OnInit} from '@angular/core';
+import {MenuService} from './menu.service';
 
 @Component({
     selector: 'sid-menu',
@@ -9,7 +8,7 @@ import {MenuService} from "./menu.service";
     providers: [MenuService]
 })
 export class MenuComponent implements OnInit {
-    rootMenu: Menu[];
+    public rootMenu: IMenu[];
 
     constructor(private menuService: MenuService) {
     }
@@ -29,6 +28,6 @@ export class MenuComponent implements OnInit {
         const vm = this;
         vm.menuService.create(menuTitle).subscribe(data => {
             vm.rootMenu.push(data);
-        })
+        });
     }
 }

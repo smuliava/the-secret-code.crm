@@ -5,9 +5,9 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MdButtonModule, MdCheckboxModule, MdSidenavModule, MdListModule} from '@angular/material';
 import {MenuComponent} from './components/menu/menu.component';
-import {RouterModule} from "@angular/router";
-import {routes} from "./app.routes";
-import {HttpClientModule} from "@angular/common/http";
+import {RouterModule} from '@angular/router';
+import {routes} from './app.routes';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -27,4 +27,5 @@ import {HttpClientModule} from "@angular/common/http";
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
