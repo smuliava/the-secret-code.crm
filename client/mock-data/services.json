@@ -1,5 +1,14 @@
 {
-    "system-menu": [
-        { "id": 1, "title": "Root menu", "hint": "Root menu" }
+    "menu": [
+        {"id": 1, "title": "Root menu 1", "parentId": null},
+        {"id": 2, "title": "Root menu 2", "parentId": null},
+        {"id": 3, "title": "Root menu 3", "parentId": null},
+        {"id": 4, "title": "Root menu 4", "parentId": null},
+        {"id": 5, "title": "Root menu 5", "parentId": null},
+        {"id": 6, "title": "Root menu 6", "parentId": null},
+        {"id": 7, "title": "Root menu 7", "parentId": null},
+        {"id": 8, "title": "Root menu 8", "parentId": null},
+        {"id": 9, "title": "Root menu 9", "parentId": null},
+        {"id": 10, "title": "Root menu 10", "parentId": null}
     ]
 }
