@@ -1,0 +1,15 @@
+.menu {
+    background-color: blue;
+    height: 400px;
+    &-container {
+        width: inherit;
+        height: inherit;
+        border: 1px solid rgba(0, 0, 0, 0.5);
+        &-items {
+            display: flex;
+            height: inherit;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}

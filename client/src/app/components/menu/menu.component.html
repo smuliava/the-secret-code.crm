@@ -1,11 +1,24 @@
-<md-sidenav-container class="example-container">
-    <md-sidenav #sidenav class="example-sidenav">
-    </md-sidenav>
+<div class="menu">
+    <md-sidenav-container class="menu-container">
+        <md-sidenav #sidenav mode="push" class="menu-container-items">
+            <md-list>
+                <md-list-item *ngFor="let menu of rootMenu" class="mat-menu-item">
+                    <p md-line>{{menu.title}}</p>
+                </md-list-item>
+                <md-list-item>
+                    <input md-line #menuTitle/>
+                    <button md-line (click)="addMenu(menuTitle.value)">
+                        Add
+                    </button>
+                </md-list-item>
+            </md-list>
+        </md-sidenav>
 
-    <div class="example-sidenav-content">
-        <button type="button" md-button (click)="sidenav.open()">
-            START
-        </button>
-    </div>
+        <div class="example-sidenav-content">
+            <button type="button" md-button (click)="sidenav.open()">
+                START
+            </button>
+        </div>
 
-</md-sidenav-container>
+    </md-sidenav-container>
+</div>

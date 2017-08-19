@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
-import {SystemMenuComponent} from './components/system-menu/system-menu.component'
+import {MenuComponent} from './components/menu/menu.component'
 
 export const routes: Routes = [
-    {path: 'system-menu', component: SystemMenuComponent}
+    {path: 'menu', component: MenuComponent}
 ];
