@@ -48,30 +48,80 @@ namespace TheSecretCode.CRM.Controllers
         [Route("")]
         public async Task<IHttpActionResult> CreateSystemMenu(SystemMenu[] newSystemMenuItems)
         {
-            if (ModelState.IsValid)
+            if (newSystemMenuItems.Length != 0 && ModelState.IsValid)
             {
                 var db = new SystemMenuContext();
                 var parentIds = new List<Guid?>();
-                var uniqueParentIds = new Dictionary<string, bool>(10);
                 for(int i = 0, lenght = newSystemMenuItems.Length; i < lenght; i++)
                 {
-                    var parentId = newSystemMenuItems[i].ParentId;
-                    var parentIdKey = parentId.ToString();
-                    if (!uniqueParentIds.ContainsKey(parentIdKey))
+                    parentIds.Add(newSystemMenuItems[i].ParentId);
+                }
+                var systemMenu = await db.SystemMenu
+                    .Where(systemMenuItem => parentIds.Contains(systemMenuItem.ParentId))
+                    .OrderByDescending(systemMenuItem => systemMenuItem.ParentId)
+                    .OrderBy(systemMenuItem => systemMenuItem.ParentId.HasValue)
+                    .ThenBy(systemMenuItem => systemMenuItem.Order)
+                    .ToListAsync();
+                var sortedNewSystemMenuItems = newSystemMenuItems
+                    .OrderBy(systemMenuItem => systemMenuItem.ParentId)
+                    .ThenBy(systemMenuItem => systemMenuItem.Order)
+                    .ToList();
+                var currentParentId = sortedNewSystemMenuItems[0].ParentId;
+                bool sortedNewSystemMenuItemsEnd = false;
+                for (int i = 0, j = 0, numberOfItemsPassedCurrentParentId = 0,
+                    indexFirestItemCurrentParentIdInSystemMenu = 0, reorderWithoutQueue = 0,
+                    count = systemMenu.Count; i < count; i++)
+                {
+                    if (sortedNewSystemMenuItemsEnd)
                     {
-                        parentIds.Add(parentId);
-                        uniqueParentIds.Add(parentIdKey, true);
+                        systemMenu[i].Order = i - indexFirestItemCurrentParentIdInSystemMenu + numberOfItemsPassedCurrentParentId;
                     }
-                    
+                    else
+                    {
+                        if (reorderWithoutQueue <= 0 &&
+                            (systemMenu[i].ParentId != currentParentId ||
+                            sortedNewSystemMenuItems[j].ParentId == currentParentId &&
+                            systemMenu[i].ParentId == currentParentId))
+                        {
+                            if (systemMenu[i].ParentId != currentParentId)
+                            {
+                                indexFirestItemCurrentParentIdInSystemMenu = i;
+                                numberOfItemsPassedCurrentParentId = 0;
+                                currentParentId = systemMenu[i].ParentId;
+                                while (sortedNewSystemMenuItems[j].ParentId != currentParentId)
+                                {
+                                    j++;
+                                }
+                                reorderWithoutQueue = 0;
+                            }
+                            if (reorderWithoutQueue <= 0 &&
+                                (i - indexFirestItemCurrentParentIdInSystemMenu) == sortedNewSystemMenuItems[j].Order)
+                            {
+                                do
+                                {
+                                    numberOfItemsPassedCurrentParentId++;
+                                    j++;
+                                    if (j == sortedNewSystemMenuItems.Count)
+                                    {
+                                        sortedNewSystemMenuItemsEnd = true;
+                                        break;
+                                    }
+                                    if (sortedNewSystemMenuItems[j].ParentId != currentParentId)
+                                    {
+                                        reorderWithoutQueue = 0;
+                                        break;
+                                    }
+                                    reorderWithoutQueue = sortedNewSystemMenuItems[j].Order - sortedNewSystemMenuItems[j - 1].Order - 1;
+                                } while (reorderWithoutQueue == 0);
+                            }
+                        }
+                        systemMenu[i].Order = i - indexFirestItemCurrentParentIdInSystemMenu + numberOfItemsPassedCurrentParentId;
+                        reorderWithoutQueue--;
+                    }
                 }
                 db.SystemMenu.AddRange(newSystemMenuItems);
                 await db.SaveChangesAsync();
-                var systemMenu = await db.SystemMenu
-                    .Where(systemMenuItem => parentIds.Contains(systemMenuItem.ParentId))
-                    .OrderBy(systemMenuItem => systemMenuItem.Order)
-                    .ThenBy(systemMenuItem => systemMenuItem.CreatedOn)
-                    .ToArrayAsync();
-                return Ok(systemMenu);
+                return Ok(newSystemMenuItems);
             }
             return BadRequest();
         }
