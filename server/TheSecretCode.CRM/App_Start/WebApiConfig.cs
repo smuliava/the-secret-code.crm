@@ -24,7 +24,13 @@ namespace TheSecretCode.CRM
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            
+            config.Routes.MapHttpRoute(
+                name: "Menu",
+                routeTemplate: "api/{controller}/{menuType}/{parentId}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+
+
         }
     }
 }

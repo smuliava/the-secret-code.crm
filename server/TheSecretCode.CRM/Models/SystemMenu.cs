@@ -7,7 +7,7 @@ using System.Web;
 
 namespace TheSecretCode.CRM.Models
 {
-    [Table("tblSystemMenu", Schema = "public")]
+    [Table("tblMenu", Schema = "public")]
     public class SystemMenu
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,6 +25,6 @@ namespace TheSecretCode.CRM.Models
         public string Title { get; set; }
         [Required]
         public int Order { get; set; }
-        
+        public string MenuType { get; set; }
     }
 }
