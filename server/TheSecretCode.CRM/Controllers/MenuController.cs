@@ -4,57 +4,48 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using TheSecretCode.CRM.Infrastructure;
 using TheSecretCode.CRM.Models;
 
 namespace TheSecretCode.CRM.Controllers
 {
-    internal class MenuContext : DbContext
-    {
-        public MenuContext() 
-            : base("SystemMenuContext")
-        {
-
-        }
-
-        public DbSet<SystemMenu> SystemMenu { get; set; }
-    }
-    [RoutePrefix("Api/Menu")]
+    [RoutePrefix("Api/Menu/{MenuType}")]
     public class MenuController : ApiController
     {
-        private async Task<SystemMenu[]> GetMenuById(string menuType, Guid? parentId)
+        private async Task<Menu[]> GetMenuById(string menuType, Guid? parentId)
         {
-            MenuContext db = new MenuContext();
-            return await db.SystemMenu
+            MenuDbContext db = new MenuDbContext();
+            return await db.Menu
                 .Where(menuItem => menuItem.ParentId == parentId && menuItem.MenuType == menuType)
                 .OrderBy(menuItem => menuItem.Order)
                 .ToArrayAsync();
         }
         [HttpGet]
-        [Route("{MenuType}")]
-        public async Task<IHttpActionResult> GetMenu(string menuType)
+        [Route("")]
+        public async Task<IHttpActionResult> GetMainMenu(string menuType)
         {
             return Ok(await GetMenuById(menuType, null));
         }
         [HttpGet]
-        [Route("{MenuType}/{ParentId:guid}")]
+        [Route("{ParentId:guid}")]
         public async Task<IHttpActionResult> GetChildMenuById(string menuType, Guid parentId)
         {
             return Ok(await GetMenuById(menuType, parentId));
         }
         [HttpPost]
-        [Route("{MenuType}")]
-        public async Task<IHttpActionResult> CreateMenu(string menuType, SystemMenu[] newMenuItems)
+        [Route("")]
+        public async Task<IHttpActionResult> CreateMenuItems(string menuType, Menu[] newMenuItems)
         {
             if (newMenuItems.Length != 0 && ModelState.IsValid)
             {
-                var db = new MenuContext();
+                var db = new MenuDbContext();
                 var parentIds = new List<Guid?>();
                 for(int i = 0, lenght = newMenuItems.Length; i < lenght; i++)
                 {
                     parentIds.Add(newMenuItems[i].ParentId);
                     newMenuItems[i].MenuType = menuType;
                 }
-                var menu = await db.SystemMenu
+                var menu = await db.Menu
                     .Where(menuItem => parentIds.Contains(menuItem.ParentId) && menuItem.MenuType == menuType)
                     .OrderByDescending(menuItem => menuItem.ParentId)
                     .OrderBy(menuItem => menuItem.ParentId.HasValue)
@@ -115,19 +106,19 @@ namespace TheSecretCode.CRM.Controllers
                         reorderWithoutQueue--;
                     }
                 }
-                db.SystemMenu.AddRange(newMenuItems);
+                db.Menu.AddRange(newMenuItems);
                 await db.SaveChangesAsync();
                 return Ok(newMenuItems);
             }
             return BadRequest();
         }
         [HttpPut]
-        [Route("{MenuType}")]
-        public async Task<IHttpActionResult> UpdateMenuItems(string menuType, CollectionRequest<SystemMenu> newMenuItemsData)
+        [Route("")]
+        public async Task<IHttpActionResult> UpdateMenuItems(string menuType, CollectionRequest<Menu> newMenuItemsData)
         {
             if (ModelState.IsValid)
             {
-                MenuContext db = new MenuContext();
+                MenuDbContext db = new MenuDbContext();
                 if (newMenuItemsData.Reorder)
                 {
                     List<Guid?> parentIds = new List<Guid?>();
@@ -135,7 +126,7 @@ namespace TheSecretCode.CRM.Controllers
                     {
                         parentIds.Add(newMenuItemsData.Collection[i].ParentId);
                     }
-                    var menu = await db.SystemMenu
+                    var menu = await db.Menu
                     .Where(menuItem => parentIds.Contains(menuItem.ParentId) && menuItem.MenuType == menuType)
                     .OrderByDescending(menuItem => menuItem.ParentId)
                     .OrderBy(menuItem => menuItem.ParentId.HasValue)
@@ -157,7 +148,7 @@ namespace TheSecretCode.CRM.Controllers
                     var sortedCollection = newMenuItemsData.Collection
                         .OrderBy(menuItem => menuItem.Id)
                         .ToArray();
-                    var menu = await db.SystemMenu
+                    var menu = await db.Menu
                         .Where(menuItem => ids.Contains(menuItem.Id) && menuItem.MenuType == menuType)
                         .OrderBy(menuItem => menuItem.Id)
                         .ToArrayAsync();
@@ -173,6 +164,18 @@ namespace TheSecretCode.CRM.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+        [HttpDelete]
+        [Route("")]
+        public async Task<IHttpActionResult> DeleteMenuItems(string menuType, Guid[] deleteMenuIds)
+        {
+            MenuDbContext db = new MenuDbContext();
+            var oldMenu = await db.Menu
+                .Where(menuItem => deleteMenuIds.Contains(menuItem.Id) && menuItem.MenuType == menuType)
+                .ToArrayAsync();
+            db.Menu.RemoveRange(oldMenu);
+            await db.SaveChangesAsync();
+            return Ok();
         }
     }
 }
