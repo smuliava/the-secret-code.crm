@@ -1,0 +1,286 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "System of the Intelectual design"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+- name: "store"
+  description: "Access to Petstore orders"
+schemes:
+- "http"
+paths:
+  /dictionary/names:
+    get:
+      tags:
+      - "Dictionary Name"
+      summary: "Returns whole list of available dictionaries"
+      description: "Returns whole list of available dictionaries"
+      operationId: "GetDictionaries"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DictionaryNameList'
+      security:
+      - api_key: []
+    post:
+      tags:
+      - "Dictionary Name"
+      summary: "Add new dictionary"
+      description: "Add new dictionary"
+      operationId: "CreateDictionary"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "newDictionaries"
+        required: true
+        schema:
+          $ref: '#/definitions/CreateDictionaryNameList'
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/DictionaryNameList'
+        400:
+          description: "Bad request"
+      security:
+      - api_key: []
+  /dictionary/names/{dictionaryId}:
+    put:
+      tags:
+      - "Dictionary Name"
+      summary: "Update dictionary"
+      description: "Update dictionary"
+      operationId: "UpdateDictionary"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "dictionaryId"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "newDictionaryData"
+        required: true
+        schema:
+          $ref: '#/definitions/CreateDictionaryNameList'
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/DictionaryNameList'
+        400:
+          description: "Bad request"
+      security:
+      - api_key: []
+    delete:
+      tags:
+      - "Dictionary Name"
+      summary: "Delete dictionary"
+      description: "Delete dictionary"
+      operationId: "DeleteDictionary"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "dictionaryId"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DeleteDictionaryName'
+      security:
+      - api_key: []
+  /dictionary/values/{dictionaryId}:
+    get:
+      tags:
+      - "Dictionary Value"
+      summary: "Returns whole list of available dictionary values"
+      description: "Returns whole list of available dictionary values"
+      operationId: "GetDictionaryValues"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "dictionaryId"
+        type: "string"
+        required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DictionaryValueList'
+      security:
+      - api_key: []
+    post:
+      tags:
+      - "Dictionary Value"
+      summary: "Add new dictionary values"
+      description: "Add new dictionary values"
+      operationId: "CreateDictionaryValues"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "dictionaryId"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "newDictionaryValues"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: '#/definitions/CreateDictionaryValueList'
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DictionaryValueList'
+        400:
+          description: "Bad request"
+      security:
+      - api_key: []
+    put:
+      tags:
+      - "Dictionary Value"
+      summary: "Update dictionary values"
+      description: "Update dictionary values"
+      operationId: "UpdateDictionaryValues"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "dictionaryId"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "newDictionaryValuesData"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: '#/definitions/DictionaryValueList'
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DictionaryValueList'
+        400:
+          description: "Bad request"
+      security:
+      - api_key: []
+    delete:
+      tags:
+      - "Dictionary Value"
+      summary: "Delete dictionary Values"
+      description: "Delete dictionary Values"
+      operationId: "DeleteDictionaryValues"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "dictionaryId"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "DeleteDictionaryIds"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: '#/definitions/DeleteDictionaryValue'
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/DeleteDictionaryName'
+      security:
+      - api_key: []
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  DictionaryNameList:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      description:
+        type: "string"
+    xml:
+      name: "DictionaryNameList"
+  CreateDictionaryNameList:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      description:
+        type: "string"
+    xml:
+      name: "CreateDictionaryNameList"
+  CreateDictionaryValueList:
+    type: "object"
+    properties:
+      value:
+        type: "string"
+      description:
+        type: "string"
+    xml:
+      name: "CreateDictionaryValueList"
+  DeleteDictionaryName:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      description:
+        type: "string"
+    xml:
+      name: "DeleteDictionaryName"
+  DeleteDictionaryValue:
+    type: "string"
+    xml:
+      name: "DeleteDictionaryValue"
+  DictionaryValueList:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      value:
+        type: "string"
+      description:
+        type: "string"
+    xml:
+      name: "DictionaryValueList"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

@@ -27,10 +27,14 @@ namespace TheSecretCode.CRM
             config.Routes.MapHttpRoute(
                 name: "Menu",
                 routeTemplate: "api/{controller}/{menuType}/{parentId}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new { parentId = RouteParameter.Optional }
             );
 
-
+            config.Routes.MapHttpRoute(
+                name: "Dictionary",
+                routeTemplate: "api/{controller}/{setOf:regexp(^names$|^values$, \"i\")/{dictionaryNameId}",
+                defaults: new { dictionaryName = RouteParameter.Optional }
+            );
         }
     }
 }
