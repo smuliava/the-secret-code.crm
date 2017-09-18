@@ -1,0 +1,217 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "System of the Intelectual design"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+- name: "store"
+  description: "Access to Petstore orders"
+schemes:
+- "http"
+paths:
+  /menu/{menuType}/{parentId}:
+    get:
+      tags:
+      - "Menu"
+      summary: "Returns whole list of available child menu"
+      description: "Returns whole list of available child menu"
+      operationId: "GetChildMenuById"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "menuType"
+          in: "path"
+          type: "string"
+          required: true
+        - name: "parentId"
+          in: "path"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/MenuList'
+      security:
+      - api_key: []
+  /menu/{menuType}:
+    get:
+      tags:
+      - "Menu"
+      summary: "Returns whole list of available main menu"
+      description: "Returns whole list of available main menu"
+      operationId: "GetMainMenu"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "menuType"
+          in: "path"
+          type: "string"
+          required: true
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/MenuList'
+      security:
+      - api_key: []
+    post:
+      tags:
+      - "Menu"
+      summary: "Add new menu items"
+      description: "Add new menu items"
+      operationId: "CreateMenuItems"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "menuType"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "newMenuItems"
+        description: "menu items to add to user menu"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/CreateMenuList"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MenuList"
+        400:
+          description: "Bad request"
+    put:
+      tags:
+      - "Menu"
+      summary: "Update the menu items"
+      description: "Update the menu items"
+      operationId: "UpdateMenuItems"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "menuType"
+        in: "path"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "newMenuItemsData"
+        description: "menu items to update"
+        required: true
+        schema:
+          $ref: "#/definitions/UpdateMenuList"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/MenuList"
+        400:
+          description: "Bad request"
+    delete:
+      tags:
+      - "Menu"
+      summary: "Delete the menu items"
+      description: "Delete the menu items"
+      operationId: "DeleteMenuItems"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "menuType"
+        in: "path"
+        type: "string"
+        required: true
+      - in: "body"
+        name: "deleteMenuIds"
+        description: "menu items to delete"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/DeleteMenuList"
+      responses:
+        200:
+          description: "successful operation"
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  MenuList:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      parentId:
+        type: "string"
+      caption:
+        type: "string"
+      title:
+        type: "string"
+      order:
+        type: "integer"
+        format: "int32"
+    xml:
+      name: "MenuList"
+  CreateMenuList:
+    type: "object"
+    properties:
+      parentId:
+        type: "string"
+      caption:
+        type: "string"
+      title:
+        type: "string"
+      order:
+        type: "integer"
+        format: "int32"
+    xml:
+      name: "MenuList"
+  UpdateMenuList:
+    type: "object"
+    properties:
+      reorder:
+        type: "boolean"
+      collection:
+        type: "array"
+        items: 
+          type: "object"
+          properties:
+            id:
+              type: "string"
+            parentId:
+              type: "string"
+            caption:
+              type: "string"
+            title:
+              type: "string"
+            order:
+              type: "integer"
+              format: "int32"
+    xml:
+      name: "UpdateMenuList"
+  DeleteMenuList:
+    type: "string"
+    xml:
+      name: "DeleteMenuList"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

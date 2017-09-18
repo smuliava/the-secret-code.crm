@@ -1,11 +1,16 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="sergii.muliava" id="3D32E573-11C3-48E5-A3C1-E3346FCAAE7C">
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
+    </changeSet>
     <changeSet author="sergii (generated)" id="1502646060180-1">
         <createTable tableName="tblSystemMenu">
             <column defaultValueComputed="uuid_generate_v4()" name="Id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="ParrentId" type="UUID"/>
+            <column name="ParentId" type="UUID"/>
             <column name="CreatedBySystemUserId" type="UUID">
                 <constraints nullable="false"/>
             </column>
@@ -31,14 +36,14 @@
         <addPrimaryKey columnNames="Id" constraintName="tblSystemMenu_pkey" tableName="tblSystemMenu"/>
     </changeSet>
     <changeSet author="sergii (generated)" id="1502646060180-3">
-        <createIndex indexName="idxTblSystemMenuIdParrentId" tableName="tblSystemMenu">
+        <createIndex indexName="idxTblSystemMenuIdParentId" tableName="tblSystemMenu">
             <column name="Id"/>
-            <column name="ParrentId"/>
+            <column name="ParentId"/>
         </createIndex>
     </changeSet>
     <changeSet author="sergii (generated)" id="1502646060180-4">
-        <createIndex indexName="idxTblSystemMenuParrentId" tableName="tblSystemMenu">
-            <column name="ParrentId"/>
+        <createIndex indexName="idxTblSystemMenuParentId" tableName="tblSystemMenu">
+            <column name="ParentId"/>
         </createIndex>
     </changeSet>
     <changeSet author="sergii (generated)" id="1502646060180-5">
@@ -48,6 +53,6 @@
         <addForeignKeyConstraint baseColumnNames="ModifiedBySystemUserId" baseTableName="tblSystemMenu" constraintName="tblSystemMenu_ModifiedBySystemUserId_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="Id" referencedTableName="tblSystemUsers" referencedTableSchemaName="auth"/>
     </changeSet>
     <changeSet author="sergii (generated)" id="1502646060180-7">
-        <addForeignKeyConstraint baseColumnNames="ParrentId" baseTableName="tblSystemMenu" constraintName="tblSystemMenu_ParrentId_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="Id" referencedTableName="tblSystemMenu"/>
+        <addForeignKeyConstraint baseColumnNames="ParentId" baseTableName="tblSystemMenu" constraintName="tblSystemMenu_ParentId_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="Id" referencedTableName="tblSystemMenu"/>
     </changeSet>
 </databaseChangeLog>
