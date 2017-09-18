@@ -49,10 +49,18 @@ namespace TheSecretCode.CRM.Controllers
             {
                 var db = new MenuContext();
                 var parentIds = new List<Guid?>();
+                var uniqueParentId = new Dictionary<string, bool>(10);
                 for(int i = 0, lenght = newMenuItems.Length; i < lenght; i++)
                 {
-                    parentIds.Add(newMenuItems[i].ParentId);
-                    newMenuItems[i].MenuType = menuType;
+                    var parentId = newMenuItems[i].ParentId;
+                    var parentIdStr = parentId.ToString();
+                    if (!uniqueParentId.ContainsKey(parentIdStr))
+                    {
+                        uniqueParentId.Add(parentIdStr, true);
+                        parentIds.Add(parentId);
+                        newMenuItems[i].MenuType = menuType;
+                    }
+                    
                 }
                 var menu = await db.SystemMenu
                     .Where(menuItem => parentIds.Contains(menuItem.ParentId) && menuItem.MenuType == menuType)
@@ -60,67 +68,58 @@ namespace TheSecretCode.CRM.Controllers
                     .OrderBy(menuItem => menuItem.ParentId.HasValue)
                     .ThenBy(menuItem => menuItem.Order)
                     .ToArrayAsync();
-                var sortedNewMenuItems = newMenuItems
-                    .OrderBy(menuItem => menuItem.ParentId)
-                    .ThenBy(menuItem => menuItem.Order)
-                    .ToArray();
-                var currentParentId = sortedNewMenuItems[0].ParentId;
-                bool sortedNewMenuItemsEnd = false;
-                for (int i = 0, j = 0, numberOfItemsPassedCurrentParentId = 0,
-                    indexFirestItemCurrentParentIdInMenu = 0, reorderWithoutQueue = 0,
-                    length = menu.Length; i < length; i++)
+                Array.Sort<SystemMenu>(newMenuItems, (itemA, itemB) => 
                 {
-                    if (sortedNewMenuItemsEnd)
+                    var parentIdComparision = Nullable.Compare<Guid>(itemA.ParentId, itemB.ParentId);
+                    if (parentIdComparision == 0)
                     {
-                        menu[i].Order = i - indexFirestItemCurrentParentIdInMenu + numberOfItemsPassedCurrentParentId;
+                        return Nullable.Compare<int>(itemA.Order, itemB.Order);
                     }
-                    else
+                    return parentIdComparision;
+                });
+
+                var leftIndex = newMenuItems[0].Order;
+                var order = leftIndex;
+                var rightIndex = 0;
+                var leftLength = menu.Length;
+                var rightLength = newMenuItems.Length;
+                
+                while (leftIndex < leftLength && rightIndex < rightLength)
+                {
+                    var previousLeftParentId = menu[leftIndex].ParentId;
+                    var previousRightParentId = newMenuItems[rightIndex].ParentId;
+
+                    if (previousLeftParentId == previousRightParentId && menu[leftIndex].Order < newMenuItems[rightIndex].Order)
                     {
-                        if (reorderWithoutQueue <= 0 &&
-                            menu[i].ParentId != currentParentId ||
-                            sortedNewMenuItems[j].ParentId == currentParentId &&
-                            menu[i].ParentId == currentParentId)
-                        {
-                            if (menu[i].ParentId != currentParentId)
-                            {
-                                indexFirestItemCurrentParentIdInMenu = i;
-                                numberOfItemsPassedCurrentParentId = 0;
-                                currentParentId = menu[i].ParentId;
-                                while (sortedNewMenuItems[j].ParentId != currentParentId)
-                                {
-                                    j++;
-                                }
-                            }
-                            if ((i - indexFirestItemCurrentParentIdInMenu) == sortedNewMenuItems[j].Order)
-                            {
-                                do
-                                {
-                                    numberOfItemsPassedCurrentParentId++;
-                                    j++;
-                                    if (j == sortedNewMenuItems.Length)
-                                    {
-                                        sortedNewMenuItemsEnd = true;
-                                        break;
-                                    }
-                                    if (sortedNewMenuItems[j].ParentId != currentParentId)
-                                    {
-                                        reorderWithoutQueue = 0;
-                                        break;
-                                    }
-                                    reorderWithoutQueue = sortedNewMenuItems[j].Order - sortedNewMenuItems[j - 1].Order - 1;
-                                } while (reorderWithoutQueue == 0);
-                            }
-                        }
-                        menu[i].Order = i - indexFirestItemCurrentParentIdInMenu + numberOfItemsPassedCurrentParentId;
-                        reorderWithoutQueue--;
+                        leftIndex++;
                     }
+                    else if (previousLeftParentId == previousRightParentId && menu[leftIndex].Order > newMenuItems[rightIndex].Order)
+                    {
+                        rightIndex++;
+                    }
+                    else if (previousLeftParentId == previousRightParentId && menu[leftIndex].Order == newMenuItems[rightIndex].Order)
+                    {
+                        order = newMenuItems[rightIndex++].Order + 1;
+                    }
+                    else if (menu[leftIndex].ParentId != newMenuItems[rightIndex].ParentId && menu[leftIndex].ParentId == previousLeftParentId)
+                    {
+                        rightIndex++;
+                    }
+                    else if (menu[leftIndex].ParentId != newMenuItems[rightIndex].ParentId && newMenuItems[rightIndex].ParentId == previousRightParentId)
+                    {
+                        leftIndex++;
+                        order = 0;
+                    }
+                    menu[leftIndex].Order = order;
                 }
-                db.SystemMenu.AddRange(newMenuItems);
-                await db.SaveChangesAsync();
-                return Ok(newMenuItems);
+
+                //db.SystemMenu.AddRange(newMenuItems);
+                //await db.SaveChangesAsync();
+                return Ok(menu.Concat(newMenuItems));
             }
             return BadRequest();
         }
+       
         [HttpPut]
         [Route("{MenuType}")]
         public async Task<IHttpActionResult> UpdateMenuItems(string menuType, CollectionRequest<SystemMenu> newMenuItemsData)
